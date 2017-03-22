@@ -1,0 +1,28 @@
+AHT.L,Ashtead Group plc
+ANTO.L,Antofagasta plc
+BA.L,BAE Systems plc
+BATS.L,British American Tobacco plc
+CCH.L,Coca-Cola HBC AG
+CCL.L,Carnival plc
+CNA.L,Centrica plc
+CPG.L,Compass Group plc
+EXPN.L,Experian plc
+EZJ.L,EasyJet plc
+GKN.L,GKN plc
+MDC.L,Mediclinic International plc
+PFG.L,Provident Financial plc
+PPB.L,Paddy Power Betfair plc
+PRU.L,Prudential plc
+PSN.L,Persimmon plc
+RB.L,Reckitt Benckiser Group plc
+RDSA.L,Royal Dutch Shell plc
+RR.L,Rolls-Royce Holdings plc
+SDR.L,Schroders plc
+SHP.L,Shire plc
+SKY.L,Sky plc
+SSE.L,SSE plc
+STJ.L,St. James's Place plc
+TSCO.L,Tesco plc
+TUI.L,TUI AG
+VOD.L,Vodafone Group plc
+WPG.L,Worldpay Group plc
