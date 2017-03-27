@@ -152,7 +152,7 @@ public class StockTableView {
     	});
     	for (int i = 0; i < listOfFiles.length; i++) {
     		Company compA = StockCSVReader.createObservableList(listOfFiles[i]);
-    		companies.add(compA);
+            companies.add(compA);
     	}
     	return companies;
     }

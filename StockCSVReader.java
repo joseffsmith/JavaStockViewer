@@ -13,13 +13,15 @@ public class StockCSVReader {
 		String fileNameAndExt = file.getName();
 		String fileName = fileNameAndExt.substring(0, fileNameAndExt.lastIndexOf("."));
 		String companyName = getCompName(fileName);
-		Company compA = new Company(companyName,fileName);
+		Company compA = new Company(companyName,(fileName + " .L "));
 
 		try {
 			Scanner in = new Scanner( file );
 
 
 			String headers = in.nextLine();
+
+			Boolean boolTopLine = true;
 
 			while( in.hasNextLine() ) {
 				String line  = in.nextLine();
@@ -33,6 +35,11 @@ public class StockCSVReader {
 				Double close = Double.parseDouble(parts[4]); 
 				int volume = Integer.parseInt(parts[5]);
 				Double adjClose = Double.parseDouble(parts[6]);
+				//on the first run save the close as compA.setMostRecentClose()
+				if (boolTopLine) {
+					compA.setMostRecentClose(close);
+					boolTopLine = false;
+				}
 
 				compA.companyDataProperty().add(new DayEntry(date,open,high,low,close,volume,adjClose));
 				
@@ -73,4 +80,5 @@ public class StockCSVReader {
 
 
 	}
+
 }

@@ -5,16 +5,20 @@ import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.lang.Character;
+
 public class Company {
 
 	private StringProperty companyName;
 	private StringProperty stockSymbol;
-	private DoubleProperty mostRecentAdjVal;
-	private ObservableList<DayEntry> companyData = FXCollections.observableArrayList();
+	private DoubleProperty mostRecentClose;
+	private StringProperty favourite;
+	ObservableList<DayEntry> companyData = FXCollections.observableArrayList();
 
 	public Company(String companyName, String stockSymbol){
 		setCompanyName(companyName);
 		setStockSymbol(stockSymbol);
+
 	}
 
 	public final void setCompanyName(String value){
@@ -39,7 +43,7 @@ public class Company {
 	}
 
 	public final String getStockSymbol(){
-		return stockSymbolProperty().get() + " .L ";
+		return stockSymbolProperty().get();
 		
 	}
 
@@ -50,14 +54,57 @@ public class Company {
 		return stockSymbol;
 	}
 
+	public final void setMostRecentClose(Double value){
+		mostRecentCloseProperty().set(value);
+	}
+
+	public final Double getMostRecentClose(){
+		return companyData.get(0).getClose();
+
+	}
+	public DoubleProperty mostRecentCloseProperty() {
+		if (mostRecentClose == null) {
+			mostRecentClose = new SimpleDoubleProperty();
+		}
+
+		return mostRecentClose;
+	}
+
+	// public final void setFavourite() {
+	// 	favouriteProperty().set(Character.toString((char)2605));
+	// }
+	
+	// public final void setUnFavourite() {
+	// 	favouriteProperty().set(Character.toString((char)2606));
+	// }
+
+	// public final String getFavourite() {
+	// 	return favouriteProperty().get();
+	// }
+
+	// public StringProperty favouriteProperty() {
+	// 	if (favourite == null) {
+	// 		favourite = new SimpleStringProperty();
+	// 	}
+
+	// 	return favourite;
+	// }
+	
+
+
+
 	public ObservableList<DayEntry> companyDataProperty() {
 		return companyData;
 	}
 
-	public Double getTickerString() {
+	public Double getTickerString(Boolean percentage) {
 		Double todayClose = companyData.get(0).getAdjClose();
 		Double yDayClose = companyData.get(1).getAdjClose();
 		Double percentChange = todayClose / yDayClose * 100 - 100;
+		if (! percentage) {
+			percentChange = todayClose - yDayClose;
+
+		}
 		// String posSign = "";
 		// if (percentChange > 0) {
 		// 	posSign = "+";
@@ -67,6 +114,7 @@ public class Company {
 		return percentChange;
 
 	}
+
 
 	public String getHighest() {
 		Double fHighest = 0.00;
@@ -99,15 +147,13 @@ public class Company {
 	public Double getAverageClose() {
 		Double fClosing = 0.00;
 		for (int i = 0; i < companyData.size(); i++){
-			fClosing += companyData.get(i).getAdjClose();
+			fClosing += companyData.get(i).getClose();
 		}
 		fClosing /= companyData.size();
 		return fClosing;
 	}
 
-	public Double getLatestClose() {
-		return companyData.get(0).getAdjClose();
-	}
+
 
 
 	public String toString() {
