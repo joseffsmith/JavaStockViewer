@@ -2,7 +2,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.application.Application;
-import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,30 +19,34 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.FocusMode;
 
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import java.io.File;
 import java.io.FilenameFilter;
-
+import java.awt.event.MouseEvent;
+import java.awt.Cursor;
 public class HomeTableView {
-	public static GridPane getTable() {
+	public static TableView<Company> getTable() {
 
-		GridPane gridpane = new GridPane();
-		gridpane.setPadding(new Insets(5));
-		gridpane.setHgap(10);
-		gridpane.setVgap(10);
+		// GridPane gridpane = new GridPane();
+		// gridpane.setPadding(new Insets(5));
+		// gridpane.setHgap(10);
+		// gridpane.setVgap(10);
 
-		ColumnConstraints col1 = new ColumnConstraints();
-		RowConstraints row1 = new RowConstraints();
-		col1.setPercentWidth(100);
-		row1.setPercentHeight(100);
-		gridpane.getColumnConstraints().add(col1);
-		gridpane.getRowConstraints().add(row1);
+		// ColumnConstraints col1 = new ColumnConstraints();
+		// RowConstraints row1 = new RowConstraints();
+		// col1.setPercentWidth(100);
+		// row1.setPercentHeight(100);
+		// gridpane.getColumnConstraints().add(col1);
+		// gridpane.getRowConstraints().add(row1);
 
 
 		TableView<Company> companyHomeView = new TableView<Company>();
+
 
 		ObservableList<Company> companies = StockTableView.getCompanies();
 
@@ -72,11 +75,13 @@ public class HomeTableView {
 		nameCol.prefWidthProperty().bind(companyHomeView.widthProperty().multiply(6.0/11.0));
 		companyHomeView.getColumns().setAll(stockCol,nameCol,closeCol);
 		closeCol.setStyle( "-fx-alignment: CENTER-RIGHT;");
-		gridpane.add(companyHomeView,0,0);
+		companyHomeView.getSelectionModel().select(0);
+		// gridpane.add(companyHomeView,0,0);
 		// dataRows.addAll(companies.getStockSymbol(),companies.getCompanyName());
 
-		return gridpane;
+		return companyHomeView;
 
 	}
+
 
 }

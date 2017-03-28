@@ -106,9 +106,12 @@ public class Report {
 		//List Left 
 
 	    ObservableList<Company> companies = StockTableView.getCompanies();
-	    final ListView<Company> companyListView = new ListView<>(companies);
+	    final ListView<Company> companyListView = new ListView<Company>(companies);
 	    companyListView.setItems(companies);
 	    companyListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+	    //Need to fix when close report window that focus remains on that list view
+
 	   	btnGenRep.setOnAction(new EventHandler<ActionEvent>(){
 	   		@Override
 	   		public void handle(ActionEvent event) {

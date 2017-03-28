@@ -79,65 +79,78 @@ public class StockTableView {
         gridpane.add(dataLbl, 2, 0);
         GridPane.setHalignment(dataLbl, HPos.CENTER);
 
-        final TableView<DayEntry> dataTableView = new TableView<>();
-        dataTableView.setPrefWidth(600);
+        // companyListView.getFocusModel().focus(0);
+        companyListView.getSelectionModel().selectFirst();
 
-        final ObservableList<DayEntry> dataRows =  FXCollections.observableArrayList();
-        dataTableView.setItems(dataRows);
+        Company selectedC = companyListView.getSelectionModel().getSelectedItem();
+        TableView<DayEntry> dataTableView = getIndTable(selectedC);
 
-        TableColumn<DayEntry, String> dateCol = new TableColumn<>("Date");
-    	dateCol.setCellValueFactory(new PropertyValueFactory("date"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Double> openCol = new TableColumn<>("open");
-    	openCol.setCellValueFactory(new PropertyValueFactory("open"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Double> highCol = new TableColumn<>("high");
-    	highCol.setCellValueFactory(new PropertyValueFactory("high"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Double> lowCol = new TableColumn<>("low");
-    	lowCol.setCellValueFactory(new PropertyValueFactory("low"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Double> closeCol = new TableColumn<>("close");
-    	closeCol.setCellValueFactory(new PropertyValueFactory("close"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Integer> volumeCol = new TableColumn<>("volume");
-    	volumeCol.setCellValueFactory(new PropertyValueFactory("volume"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	TableColumn<DayEntry, Double> adjCloseCol = new TableColumn<>("Adjusted Close");
-    	adjCloseCol.setCellValueFactory(new PropertyValueFactory("adjClose"));
-
-    	dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
-
-    	dataTableView.getColumns().setAll(dateCol,openCol,highCol,lowCol,closeCol,volumeCol,adjCloseCol);
-    	gridpane.add(dataTableView, 2, 1);
+        dataTableView.getItems().addAll(selectedC.companyDataProperty());
+        gridpane.add(dataTableView, 2, 1);
 
 
 
     	companyListView.getSelectionModel().selectedItemProperty().addListener((
     		ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
     		if (observable != null && observable.getValue() != null) {
-    			dataRows.clear();
-    			dataRows.addAll(observable.getValue().companyDataProperty());
+    			dataTableView.getItems().clear();
+                // dataRows.clear();
+                dataTableView.getItems().addAll(observable.getValue().companyDataProperty());
+    			// dataRows.addAll(observable.getValue().companyDataProperty());
     		}
     	});
-        companyListView.getSelectionModel().selectFirst();
+        
 
     	// primaryStage.setScene(scene);
     	// primaryStage.show();
 
     	return gridpane;
+    }
+    public static TableView<DayEntry> getIndTable(Company company){
+        final TableView<DayEntry> dataTableView = new TableView<DayEntry>();
+        dataTableView.setPrefWidth(600);
+
+        final ObservableList<DayEntry> dataRows =  FXCollections.observableArrayList();
+        dataTableView.setItems(dataRows);
+
+        TableColumn<DayEntry, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory("date"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Double> openCol = new TableColumn<>("open");
+        openCol.setCellValueFactory(new PropertyValueFactory("open"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Double> highCol = new TableColumn<>("high");
+        highCol.setCellValueFactory(new PropertyValueFactory("high"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Double> lowCol = new TableColumn<>("low");
+        lowCol.setCellValueFactory(new PropertyValueFactory("low"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Double> closeCol = new TableColumn<>("close");
+        closeCol.setCellValueFactory(new PropertyValueFactory("close"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Integer> volumeCol = new TableColumn<>("volume");
+        volumeCol.setCellValueFactory(new PropertyValueFactory("volume"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        TableColumn<DayEntry, Double> adjCloseCol = new TableColumn<>("Adjusted Close");
+        adjCloseCol.setCellValueFactory(new PropertyValueFactory("adjClose"));
+
+        dateCol.setPrefWidth(dataTableView.getPrefWidth()/7);
+
+        dataTableView.getColumns().setAll(dateCol,openCol,highCol,lowCol,closeCol,volumeCol,adjCloseCol);
+        
+        return dataTableView;
     }
 
 

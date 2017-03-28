@@ -76,22 +76,26 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.Group;
-
+import javafx.stage.Screen;
 import javafx.scene.control.Alert;
-
+import javafx.geometry.Rectangle2D;
+import javafx.scene.control.TableView;
 public class homeMenu extends Application {
 
 	@Override
 	public void start(Stage stage){
-		stage.setTitle("Welcome");
+		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
+		stage.setTitle("Welcome");
+		stage.setX(primaryScreenBounds.getMinX());
+		stage.setY(primaryScreenBounds.getMinY());
 		//Set up border pane for the main window
 
 		BorderPane rootNode = new BorderPane();
 
 
 
-		Scene myScene = new Scene(rootNode, 1000, 700);
+		Scene myScene = new Scene(rootNode, 1000, 600);
 		rootNode.prefWidthProperty().bind(myScene.widthProperty());
 		stage.setScene(myScene);
 		
@@ -240,6 +244,45 @@ public class homeMenu extends Application {
 		VBox.setMargin(vbTopLeft, new Insets(5,5,5,5));
 
 
+		/// BOTTOM
+
+		Button btnReport = new Button("Generate Report");
+		Button btnAddFav = new Button("Add Favourite");
+		Button btnResetView = new Button("Reset View");
+		Button btnViewDetails = new Button("View Details");
+
+		btnReport.setPrefWidth(140);
+		btnReport.setPrefHeight(40);
+		btnAddFav.setPrefWidth(140);
+		btnAddFav.setPrefHeight(40);
+		btnResetView.setPrefWidth(140);
+		btnResetView.setPrefHeight(40);
+		btnViewDetails.setPrefWidth(140);
+		btnViewDetails.setPrefHeight(40);
+
+
+		btnReport.setOnAction(
+			new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					final Stage dialog = Report.reportDialogStage();
+
+					dialog.initModality(Modality.APPLICATION_MODAL);
+                	dialog.initOwner(stage);
+
+                	dialog.show();
+				}
+			});
+
+
+
+		HBox hbBottom = new HBox(5);
+		hbBottom.getChildren().addAll(btnViewDetails, btnResetView, btnAddFav, btnReport);
+		hbBottom.setAlignment(Pos.CENTER_RIGHT);
+		rootNode.setBottom(hbBottom);
+		BorderPane.setAlignment(hbBottom, Pos.CENTER);
+		BorderPane.setMargin(hbBottom, new Insets(5,5,5,5));
+
 		//Bottom Left
 		//Possibly look at toggle buttons for these
 
@@ -247,9 +290,9 @@ public class homeMenu extends Application {
 		Button btnGraph = new Button("Graph");
 		Button btnTable = new Button("Table");
 
-		btnGraph.setOnAction(e -> btnGraphClick(rootNode));
-		btnTable.setOnAction(e -> btnTableClick(rootNode));
-		btnHome.setOnAction(e -> btnHomeClick(rootNode));
+		btnGraph.setOnAction(e -> btnGraphClick(rootNode,btnViewDetails));
+		btnTable.setOnAction(e -> btnTableClick(rootNode,btnViewDetails));
+		btnHome.setOnAction(e -> btnHomeClick(rootNode,btnViewDetails));
 
 		btnHome.setPrefWidth(140);
 		btnHome.setPrefHeight(40);
@@ -276,44 +319,7 @@ public class homeMenu extends Application {
 		BorderPane.setMargin(vbLeft, new Insets(5, 5, 5, 5));
 
 		
-		/// BOTTOM
 
-		Button btnReport = new Button("Generate Report");
-		Button btnAddFav = new Button("Add Favourite");
-		Button btnResetView = new Button("Reset View");
-		Button btnDelStocks = new Button("Delete Stocks");
-
-		btnReport.setPrefWidth(140);
-		btnReport.setPrefHeight(40);
-		btnAddFav.setPrefWidth(140);
-		btnAddFav.setPrefHeight(40);
-		btnResetView.setPrefWidth(140);
-		btnResetView.setPrefHeight(40);
-		btnDelStocks.setPrefWidth(140);
-		btnDelStocks.setPrefHeight(40);
-
-
-		btnReport.setOnAction(
-			new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					final Stage dialog = Report.reportDialogStage();
-
-					dialog.initModality(Modality.APPLICATION_MODAL);
-                	dialog.initOwner(stage);
-
-                	dialog.show();
-				}
-			});
-
-
-
-		HBox hbBottom = new HBox(5);
-		hbBottom.getChildren().addAll(btnDelStocks, btnResetView, btnAddFav, btnReport);
-		hbBottom.setAlignment(Pos.CENTER_RIGHT);
-		rootNode.setBottom(hbBottom);
-		BorderPane.setAlignment(hbBottom, Pos.CENTER);
-		BorderPane.setMargin(hbBottom, new Insets(5,5,5,5));
 
 
 		///RIGHTYTIGHTY
@@ -327,10 +333,23 @@ public class homeMenu extends Application {
 		// hbCenter.getChildren().add(table);
 		// hbCenter.setAlignment(Pos.CENTER_LEFT);
 		// HBox.setHgrow(table, Priority.ALWAYS);
-		GridPane tableView = HomeTableView.getTable();
+		TableView<Company> tableView = HomeTableView.getTable();
 		rootNode.setCenter(tableView);
 		BorderPane.setAlignment(hbCenter, Pos.CENTER);
 		BorderPane.setMargin(hbCenter, new Insets(5,5,5,5));
+
+		
+		btnViewDetails.setOnAction(
+			new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					// System.out.println();
+					final Stage dialog = DetailedView.detailedViewStage(tableView.getSelectionModel().getSelectedItem());
+					// dialog.initModality(Modality.APPLICATION_MODAL);
+                	dialog.initOwner(stage);
+					dialog.show();
+				}
+			});
 
 		//SHOW
 
@@ -347,19 +366,28 @@ public class homeMenu extends Application {
 
 
 
-	public static void btnHomeClick(BorderPane rootNode){
+	public static void btnHomeClick(BorderPane rootNode, Button btnViewDetails){
+		if(btnViewDetails.isDisable()){
+			btnViewDetails.setDisable(false);
+		}
 		rootNode.setCenter(null);
-		GridPane homeView = HomeTableView.getTable();
+		TableView<Company> homeView = HomeTableView.getTable();
 		rootNode.setCenter(homeView);
 	}
-	public static void btnGraphClick(BorderPane rootNode){
+	public static void btnGraphClick(BorderPane rootNode, Button btnViewDetails){
+		if(!btnViewDetails.isDisable()){
+			btnViewDetails.setDisable(true);
+		}
 		rootNode.setCenter(null);
 		GridPane chartView = ChartView.getChart();
 		rootNode.setCenter(chartView);
 		
 	}
 
-	public static void btnTableClick(BorderPane rootNode){
+	public static void btnTableClick(BorderPane rootNode, Button btnViewDetails){
+		if(!btnViewDetails.isDisable()){
+			btnViewDetails.setDisable(true);
+		}
 		rootNode.setCenter(null);
 		GridPane tableView = StockTableView.getTable();
 		rootNode.setCenter(tableView);
@@ -389,7 +417,7 @@ public class homeMenu extends Application {
 			    .font(Font.font("SansSerif", FontWeight.BOLD, 20))
 			    .build();	
 
-
+			
 			Text textRef = new Text();
 			textRef.setTextAlignment(TextAlignment.JUSTIFY);
 			textRef.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
