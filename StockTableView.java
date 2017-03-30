@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import java.io.File;
 import java.io.FilenameFilter;
+import javafx.scene.layout.RowConstraints;
 
 public class StockTableView {
 	public static GridPane getTable() {
@@ -41,11 +42,14 @@ public class StockTableView {
         gridpane.setHgap(10);
         gridpane.setVgap(10);
         // root.setCenter(gridpane);
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(100);
+        gridpane.getRowConstraints().add(row1);
 
         // candidates label
         Label candidatesLbl = new Label("Company");
         GridPane.setHalignment(candidatesLbl, HPos.CENTER);
-        gridpane.add(candidatesLbl, 0, 0);
+        // gridpane.add(candidatesLbl, 0, 0);
 
         ObservableList<Company> companies = getCompanies();
         final ListView<Company> companyListView = new ListView<>(companies);
@@ -74,9 +78,9 @@ public class StockTableView {
             }
         });
 
-        gridpane.add(companyListView, 0, 1);
+        gridpane.add(companyListView, 0, 0);
         Label dataLbl = new Label("Data");
-        gridpane.add(dataLbl, 2, 0);
+        // gridpane.add(dataLbl, 2, 0);
         GridPane.setHalignment(dataLbl, HPos.CENTER);
 
         // companyListView.getFocusModel().focus(0);
@@ -86,7 +90,7 @@ public class StockTableView {
         TableView<DayEntry> dataTableView = getIndTable(selectedC);
 
         dataTableView.getItems().addAll(selectedC.companyDataProperty());
-        gridpane.add(dataTableView, 2, 1);
+        gridpane.add(dataTableView, 1, 0);
 
 
 

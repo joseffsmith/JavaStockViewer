@@ -112,6 +112,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 public class DetailedView {
 	public static Stage detailedViewStage(Company company){
@@ -121,14 +122,25 @@ public class DetailedView {
 		stage.setScene(scene);
 		stage.setTitle(company.toString());
 
-		ColumnConstraints col1 = new ColumnConstraints();	
+		ColumnConstraints col1 = new ColumnConstraints();
+		RowConstraints row1 = new RowConstraints();
+		RowConstraints row2 = new RowConstraints();
+		RowConstraints row3 = new RowConstraints();
+
+		row1.setPercentHeight(10);
+		row2.setPercentHeight(10);	
+		row3.setPercentHeight(80);	
 		col1.setPercentWidth(50);
+
 		gp.getColumnConstraints().add(col1);
-		
+		gp.getRowConstraints().addAll(row1);
+		gp.getRowConstraints().addAll(row2);
 		// Company name top left
 
 		Label lblCompName = new Label(company.getCompanyName());
 		Label lblMostRecentClose = new Label(company.getMostRecentClose().toString());
+		lblCompName.setFont(Font.font(26));
+		lblMostRecentClose.setFont(Font.font(26));
 
 		gp.add(lblMostRecentClose,0,1);
 		gp.add(lblCompName,0,0);
@@ -137,11 +149,12 @@ public class DetailedView {
 		//Stock Symbol Top Right
 		
 		Label lblStockSym = new Label(company.getStockSymbol());
+		lblStockSym.setFont(Font.font(26));
 
 		Double percChange = company.getTickerString(true);
 		Text textRef = new Text();
 		textRef.setTextAlignment(TextAlignment.JUSTIFY);
-		textRef.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		textRef.setFont(Font.font("SansSerif", FontWeight.BOLD, 26));
 		if (percChange > 0) {
 			//Make it green and add plus
 			textRef.setText("+"+String.format("%.3f",percChange)+"% ");
@@ -165,15 +178,17 @@ public class DetailedView {
 
 		final CategoryAxis xAxis = new CategoryAxis();
 		final NumberAxis yAxis = new NumberAxis();
-		String[] colName = {"Open","Close"};
+		String[] colName = {"Open","Close","High","Low"};
 		
 
 		yAxis.setLabel("Price");    
-		LineChart lineChart = new LineChart(xAxis,yAxis);
+		LineChart<String,Double> lineChart = new LineChart(xAxis,yAxis);
 		lineChart.setHorizontalGridLinesVisible(false);
 		lineChart.setVerticalGridLinesVisible(false);
-		lineChart.setData(ChartView.getChartData(company,colName));
+		lineChart.setData(ChartView.getChartData(company,colName,4));
 		lineChart.setCreateSymbols(false);
+		lineChart.setAnimated(false);
+		lineChart.setTitle("Time Frame: All Data");
 
 		
 		CheckBox btnOpen = new CheckBox("Open");
@@ -182,14 +197,118 @@ public class DetailedView {
 		CheckBox btnLow = new CheckBox("Low");
 		CheckBox btnVolume = new CheckBox("Volume");
 
+		btnOpen.setUserData("Open");
+		btnClose.setUserData("Close");
+		btnHigh.setUserData("High");
+		btnLow.setUserData("Low");
+		btnVolume.setUserData("Volume");
+
+		btnOpen.setSelected(true);
+		btnClose.setSelected(true);
+		btnHigh.setSelected(true);
+		btnLow.setSelected(true);
+
+		HBox hb = new HBox();
+		hb.setAlignment(Pos.BOTTOM_CENTER);
+		
 
 
+		hb.getChildren().addAll(btnOpen,btnClose,btnHigh,btnLow,btnVolume);
+
+		gp.add(hb,0,3);
 //  just need to copy from chartview to here to see multiple things for one company
 
 
 
 
+		btnOpen.selectedProperty().addListener(new ChangeListener<Boolean>() {
+           public void changed(ObservableValue<? extends Boolean> ov,
+             Boolean old_val, Boolean new_val) {
+             if (new_val) {
+             	lineChart.getData().add(ChartView.getChartData(company,"Open"));           	
+             }	else {
+             	for (int i = 0; i < lineChart.getData().size(); i++){
+             		if (lineChart.getData().get(i).getName() == "Open") {
+             			lineChart.getData().remove(i);
+             		}
+             	}
+             }
 
+          }
+        });
+
+		btnClose.selectedProperty().addListener(new ChangeListener<Boolean>() {
+           public void changed(ObservableValue<? extends Boolean> ov,
+             Boolean old_val, Boolean new_val) {
+             if (new_val) {
+             	lineChart.getData().add(ChartView.getChartData(company,"Close"));           	
+             }	else {
+             	for (int i = 0; i < lineChart.getData().size(); i++){
+             		if (lineChart.getData().get(i).getName() == "Close") {
+             			lineChart.getData().remove(i);
+             		}
+             	}
+             }
+
+          }
+        });
+
+		btnLow.selectedProperty().addListener(new ChangeListener<Boolean>() {
+           public void changed(ObservableValue<? extends Boolean> ov,
+             Boolean old_val, Boolean new_val) {
+             if (new_val) {
+             	lineChart.getData().add(ChartView.getChartData(company,"Low"));           	
+             }	else {
+             	for (int i = 0; i < lineChart.getData().size(); i++){
+             		if (lineChart.getData().get(i).getName() == "Low") {
+             			lineChart.getData().remove(i);
+             		}
+             	}
+             }
+
+          }
+        });
+
+		btnHigh.selectedProperty().addListener(new ChangeListener<Boolean>() {
+           public void changed(ObservableValue<? extends Boolean> ov,
+             Boolean old_val, Boolean new_val) {
+             if (new_val) {
+             	lineChart.getData().add(ChartView.getChartData(company,"High"));           	
+             }	else {
+             	for (int i = 0; i < lineChart.getData().size(); i++){
+             		if (lineChart.getData().get(i).getName() == "High") {
+             			lineChart.getData().remove(i);
+             		}
+             	}
+             }
+
+          }
+        });
+
+		btnVolume.selectedProperty().addListener(new ChangeListener<Boolean>() {
+           public void changed(ObservableValue<? extends Boolean> ov,
+             Boolean old_val, Boolean new_val) {
+             if (new_val) {
+             	lineChart.getData().clear();
+     			btnOpen.setSelected(false);
+				btnClose.setSelected(false);
+				btnHigh.setSelected(false);
+				btnLow.setSelected(false);
+             	lineChart.getData().add(ChartView.getChartData(company,"Volume"));           	
+             }	else {
+             	for (int i = 0; i < lineChart.getData().size(); i++){
+             		if (lineChart.getData().get(i).getName() == "Volume") {
+             			lineChart.getData().remove(i);
+		     			btnOpen.setSelected(true);
+						btnClose.setSelected(true);
+						btnHigh.setSelected(true);
+						btnLow.setSelected(true);
+             		}
+             	}
+             }
+
+          }
+        });
 
 
 

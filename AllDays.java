@@ -1,4 +1,6 @@
-
+import javafx.collections.ObservableList;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -11,7 +13,6 @@ public class AllDays {
 	private String companyName;
 
 	public AllDays(String inStockName, String inCompanyName) {
-		entries = new ArrayList<DayEntry>();
 		stockName = inStockName;
 		companyName = inCompanyName;
 	}
@@ -20,9 +21,7 @@ public class AllDays {
 		Double high,Double low,Double close,
 		int volume, Double adjClose){
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate newDate = LocalDate.parse(date, formatter);
-		entries.add(new DayEntry(newDate, open, high, low, close,
+		entries.add(new DayEntry(date, open, high, low, close,
 		 volume, adjClose));
 
 	}

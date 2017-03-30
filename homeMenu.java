@@ -86,7 +86,7 @@ public class homeMenu extends Application {
 	public void start(Stage stage){
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
-		stage.setTitle("Welcome");
+		stage.setTitle("Simple Stock Viewer");
 		stage.setX(primaryScreenBounds.getMinX());
 		stage.setY(primaryScreenBounds.getMinY());
 		//Set up border pane for the main window
@@ -155,32 +155,32 @@ public class homeMenu extends Application {
 
       	Menu ttMenu = new Menu("Ticker Tape");
       	
-      	//percent or value
-      	RadioMenuItem percentRadio = new RadioMenuItem("Percentage");
-      	RadioMenuItem valueRadio = new RadioMenuItem("Value");
+      	// //percent or value
+      	// RadioMenuItem percentRadio = new RadioMenuItem("Percentage");
+      	// RadioMenuItem valueRadio = new RadioMenuItem("Value");
 
-      	ToggleGroup toggleGroup = new ToggleGroup();
+      	// ToggleGroup toggleGroup = new ToggleGroup();
 
-      	percentRadio.setOnAction(new EventHandler<ActionEvent>() {
-      		@Override public void handle(ActionEvent e) {
-      			if (! percentage) {
-      				transTransition.stop();
-      				final TextFlow textRef = getTickerFlow(true);
+      	// percentRadio.setOnAction(new EventHandler<ActionEvent>() {
+      	// 	@Override public void handle(ActionEvent e) {
+      	// 		if (! percentage) {
+      	// 			transTransition.stop();
+      	// 			final TextFlow textRef = getTickerFlow(true);
       				
-      			} 
-      		}
-      	});
-      	percentRadio.setToggleGroup(toggleGroup);
-      	valueRadio.setOnAction(new EventHandler<ActionEvent>() {
-      		@Override public void handle(ActionEvent e) {
-      			if (percentage) {
-      				transTransition.stop();
-      				final TextFlow textRef = getTickerFlow(false);
-      				transTransition.playFromStart();
-      			} 
-      		}
-      	});
-      	valueRadio.setToggleGroup(toggleGroup);
+      	// 		} 
+      	// 	}
+      	// });
+      	// percentRadio.setToggleGroup(toggleGroup);
+      	// valueRadio.setOnAction(new EventHandler<ActionEvent>() {
+      	// 	@Override public void handle(ActionEvent e) {
+      	// 		if (percentage) {
+      	// 			transTransition.stop();
+      	// 			final TextFlow textRef = getTickerFlow(false);
+      	// 			transTransition.playFromStart();
+      	// 		} 
+      	// 	}
+      	// });
+      	// valueRadio.setToggleGroup(toggleGroup);
 
 
       	Slider tickerSpeed = new Slider();
@@ -205,8 +205,8 @@ public class homeMenu extends Application {
 
 
 
-      	ttMenu.getItems().add(percentRadio);
-      	ttMenu.getItems().add(valueRadio);
+      	// ttMenu.getItems().add(percentRadio);
+      	// ttMenu.getItems().add(valueRadio);
 		ttMenu.getItems().add(textSpeed);
       	ttMenu.getItems().add(sliderSpeed);
       	
@@ -247,16 +247,12 @@ public class homeMenu extends Application {
 		/// BOTTOM
 
 		Button btnReport = new Button("Generate Report");
-		Button btnAddFav = new Button("Add Favourite");
-		Button btnResetView = new Button("Reset View");
+
 		Button btnViewDetails = new Button("View Details");
 
 		btnReport.setPrefWidth(140);
 		btnReport.setPrefHeight(40);
-		btnAddFav.setPrefWidth(140);
-		btnAddFav.setPrefHeight(40);
-		btnResetView.setPrefWidth(140);
-		btnResetView.setPrefHeight(40);
+
 		btnViewDetails.setPrefWidth(140);
 		btnViewDetails.setPrefHeight(40);
 
@@ -277,7 +273,7 @@ public class homeMenu extends Application {
 
 
 		HBox hbBottom = new HBox(5);
-		hbBottom.getChildren().addAll(btnViewDetails, btnResetView, btnAddFav, btnReport);
+		hbBottom.getChildren().addAll(btnViewDetails, btnReport);
 		hbBottom.setAlignment(Pos.CENTER_RIGHT);
 		rootNode.setBottom(hbBottom);
 		BorderPane.setAlignment(hbBottom, Pos.CENTER);

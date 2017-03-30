@@ -70,27 +70,6 @@ public class Company {
 		return mostRecentClose;
 	}
 
-	// public final void setFavourite() {
-	// 	favouriteProperty().set(Character.toString((char)2605));
-	// }
-	
-	// public final void setUnFavourite() {
-	// 	favouriteProperty().set(Character.toString((char)2606));
-	// }
-
-	// public final String getFavourite() {
-	// 	return favouriteProperty().get();
-	// }
-
-	// public StringProperty favouriteProperty() {
-	// 	if (favourite == null) {
-	// 		favourite = new SimpleStringProperty();
-	// 	}
-
-	// 	return favourite;
-	// }
-	
-
 
 
 	public ObservableList<DayEntry> companyDataProperty() {
@@ -105,12 +84,7 @@ public class Company {
 			percentChange = todayClose - yDayClose;
 
 		}
-		// String posSign = "";
-		// if (percentChange > 0) {
-		// 	posSign = "+";
-		// }
 
-		// return posSign + String.format("%.3f",percentChange)+ "% | ";
 		return percentChange;
 
 	}

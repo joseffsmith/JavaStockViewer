@@ -34,7 +34,10 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Toggle;
 import javafx.scene.layout.HBox;
-
+import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.geometry.*;
+import javafx.scene.control.Slider;
 public class ChartView {
 	public static GridPane getChart() {
 
@@ -45,18 +48,19 @@ public class ChartView {
 		ColumnConstraints col2 = new ColumnConstraints();
 
 		RowConstraints row1 = new RowConstraints();
+		RowConstraints row2 = new RowConstraints();
+
 		col1.setPercentWidth(25);
 		col2.setPercentWidth(75);
+		row1.setPercentHeight(90);
+		row2.setPercentHeight(10);
+
 		gridpane.getColumnConstraints().addAll(col1,col2);
-		// gridpane.getRowConstraints().add(row1);
+		gridpane.getRowConstraints().addAll(row1,row2);
 
 		ObservableList<Company> companies = StockTableView.getCompanies();  
 
 		// ChartSetUp
-
-
-
-		// lineChart.getData()
 
 		// List of Companies
 
@@ -81,6 +85,14 @@ public class ChartView {
 		RadioButton btnLow = new RadioButton("Low");
 		RadioButton btnVolume = new RadioButton("Volume");
 
+		Slider timeFrame = new Slider();
+		timeFrame.setMin(1);
+		timeFrame.setMax(4);
+		timeFrame.setValue(4);
+		timeFrame.setMajorTickUnit(1);
+		timeFrame.setShowTickMarks(true);
+		timeFrame.setMinorTickCount(0);
+		timeFrame.setSnapToTicks(true);
 
 				
 		btnOpen.setToggleGroup(toggles);
@@ -95,7 +107,9 @@ public class ChartView {
 		btnVolume.setUserData("Volume");
 
 		HBox hb = new HBox();
-		hb.getChildren().addAll(btnOpen,btnClose,btnHigh,btnLow,btnVolume);
+		hb.setAlignment(Pos.BOTTOM_CENTER);
+
+		hb.getChildren().addAll(btnOpen,btnClose,btnHigh,btnLow,btnVolume,timeFrame);
 
 		btnOpen.setSelected(true);
 		String colName = toggles.getSelectedToggle().getUserData().toString();
@@ -103,8 +117,10 @@ public class ChartView {
 		LineChart lineChart = new LineChart(xAxis,yAxis);
 		lineChart.setHorizontalGridLinesVisible(false);
 		lineChart.setVerticalGridLinesVisible(false);
-		lineChart.setData(getChartData(companyListView.getSelectionModel().getSelectedItems(),colName));
-
+		lineChart.setData(getChartData(companyListView.getSelectionModel().getSelectedItems(),colName,4));
+		lineChart.setTitle("Time Frame: All Data");
+		lineChart.setCreateSymbols(false);
+		lineChart.setAnimated(false);
 
 
 		toggles.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
@@ -114,131 +130,77 @@ public class ChartView {
 					String colName = toggles.getSelectedToggle().getUserData().toString();
 					yAxis.setLabel(colName);  		
 					ObservableList<Company> selectedCompanies = companyListView.getSelectionModel().getSelectedItems();
-
+					Number new_val = timeFrame.getValue();
 					lineChart.getData().clear();
-					lineChart.setData(getChartData(selectedCompanies,colName));
+					lineChart.setData(getChartData(selectedCompanies,colName,new_val));
+					
 				}
 			}
 		});
 
 
 
-		
-		//list of companies on the side, when one is cliced load
-		// getCHartData for the company thats clicked with whatever checkboxes are clicked
-		// when checkboxes are clicked change all the companys that are currently clicked their 
-
-		// lineChart.setCreateSymbols(false);
-		// bind these to a menu icon
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// ObservableList<Company> selectedCompanies = FXCollections.<Company>observableArrayList();
-
-		// //need to create a new list based upon what is selected
-		// companyListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Company>() {
-		//  @Override
-		//  public void changed(ObservableValue<? extends Company> observable, Company oldValue, Company newValue) {
-		//      System.out.println("ChangedFrom " + oldValue + " to: " + newValue);
-		//      if (oldValue != null && !selectedCompanies.contains(oldValue)) {
-
-		//          selectedCompanies.add(oldValue);
-		//      }
-
-		//      if (selectedCompanies.contains(newValue)) {
-		//          System.out.println("Already got it");
-		//          // Remove from list
-		//          // selectedCompanies.remove(newValue);
-		//          System.out.println(companyListView.getSelectionModel().getSelectedIndices());
-		//          //deselect
-		//      } else {
-		//          selectedCompanies.add(newValue);
-		//      }
-
-		//      if (!companyListView.getSelectionModel().getSelectedItems().containsAll(selectedCompanies)){
-		//          for (int i=0;i<selectedCompanies.size();i++){
-		//              companyListView.getSelectionModel().select(selectedCompanies.get(i));
-		//          } 
-		//      } else {
-		//          System.out.println("all ready");
-		//      }
-		//      // if companyListView.selected not equal to selectedcompanies, select all
-
-		//      // System.out.println(selectedCompanies);
-		//  }
-		// });
 
 		companyListView.setOnMouseClicked(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
 				ObservableList<Company> selectedCompanies = companyListView.getSelectionModel().getSelectedItems();
-				// System.out.println(selectedCompanies);
 				lineChart.getData().clear();
-				lineChart.setData(getChartData(selectedCompanies,colName));
-				// ObservableList<XYChart.Series<String,Double>> s = lineChart.getData();
-				
+				Number new_val = timeFrame.getValue();
 
-				// for (XYChart.Series<String, Double> k : s) {
-				// 	for (XYChart.Data<String, Double> d : k.getData()) {
-				// 		Tooltip t = new Tooltip(d.getXValue().toString() +"\n" + d.getYValue());
-				// 		System.out.println(t.getText());
-				// 		t.minWidth(20);
-				// 		t.minHeight(20);
-				// 		d.getNode().minWidth(20);
-				// 		d.getNode().minHeight(20);
-				// 		Tooltip.install(d.getNode(), t);
-						
-						// System.out.println(d.getNode().minWidth());
-					}
-				});	
+				lineChart.setData(getChartData(selectedCompanies,colName,new_val));
 
-			// }
-		// });
-		// for (int i = 0; i < lineChart.getData().size(); i++){
-		// 	System.out.println(lineChart.getData().get(i).getData());
-		// 	// XYChart.Series<String,Double> s = lineChart.getData().get(i);
-		// 	// System.out.println(s);
-		// }
-	
-		
+			}
+		});	
 
+
+		timeFrame.valueProperty().addListener(new ChangeListener<Number>(){
+			public void changed(ObservableValue<? extends Number> ov,
+				Number old_value, Number new_val) {
+				String colName = toggles.getSelectedToggle().getUserData().toString();
+				ObservableList<Company> selectedCompanies = companyListView.getSelectionModel().getSelectedItems();
+				lineChart.getData().clear();
+				lineChart.setData(getChartData(selectedCompanies,colName,new_val));
+				int new_val_int = new_val.intValue();
+				if (new_val_int == 1) {
+					lineChart.setTitle("Time Frame: 1 Week");
+				} else if (new_val_int == 2) {
+					lineChart.setTitle("Time Frame: 1 Month");
+				} else if (new_val_int == 3) {
+					lineChart.setTitle("Time Frame: 3 Months");
+				} else {
+					lineChart.setTitle("Time Frame: All Data");
+				}
+			}
+		});
 
 		//Chart Area
 
-
-		gridpane.add(hb,1,1);
-		gridpane.add(companyListView,0,0);
-		gridpane.add(lineChart,1,0);
+		gridpane.add(hb,1,1,1,1);
+		gridpane.add(companyListView,0,0,1,2);
+		gridpane.add(lineChart,1,0,1,1);
 		return gridpane;
 	}
 
 
 
-	public static ObservableList<XYChart.Series<String,Double>> getChartData(Company comp, String[] colNames) {
+	public static ObservableList<XYChart.Series<String,Double>> getChartData(Company comp, String[] colNames, Number new_val) {
 		ObservableList<XYChart.Series<String, Double>> answer = FXCollections.observableArrayList();
+		int k=  comp.companyDataProperty().size()-1;
+		int value = new_val.intValue();
+		if (value == 1){
+			k= 4;
+		} else if (value == 2){
+			k= 19;
+		} else if (value == 3) {
+			k= 59;
+		}
 
 		for (String colName : colNames) {
 			XYChart.Series<String, Double> openL= new Series<String, Double>();
 			openL.setName(colName);
-			for (int i=comp.companyDataProperty().size()-1; i >= 0 ; i-- ){
+
+			for (int i = k; i >= 0 ; i-- ){
 				if (colName == "Open") {
 					openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getOpen()));
 
@@ -260,17 +222,59 @@ public class ChartView {
 
 		return answer;
 	}
+	public static XYChart.Series<String,Double> getChartData(Company comp, String colName) {
+		int k=  comp.companyDataProperty().size()-1;
 
-	private static ObservableList<XYChart.Series<String,Double>> getChartData(ObservableList<Company> companies, String colName) {
+
+		XYChart.Series<String, Double> openL= new Series<String, Double>();
+		openL.setName(colName);
+
+		for (int i = k; i >= 0 ; i-- ){
+			if (colName == "Open") {
+				openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getOpen()));
+
+			} else if (colName == "Close") {
+				openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getClose()));
+
+			} else if (colName == "High") {
+				openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getHigh()));
+
+			} else if (colName == "Low") {
+				openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getLow()));
+
+			} else if (colName == "Volume") {
+				openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getVolume()));
+			}
+		}
+		// answer.add(openL);
+		
+
+		return openL;
+	}
+
+	private static ObservableList<XYChart.Series<String,Double>> getChartData(ObservableList<Company> companies, String colName, Number new_val) {
 		ObservableList<XYChart.Series<String, Double>> answer = FXCollections.observableArrayList();
+
+
+
 		for (int j = 0; j <companies.size();j++) {
 			XYChart.Series<String, Double> openL = new XYChart.Series<String, Double>();
 
 			Company comp = companies.get(j);
+
+			int k= comp.companyDataProperty().size()-1;
+			int value = new_val.intValue();
+			if (value == 1){
+				k=4;
+			} else if (value == 2){
+				k=19;
+			} else if (value == 3) {
+				k=59;
+			}
 			
 			openL.setName(comp.getCompanyName());
 
-			for (int i=comp.companyDataProperty().size()-1; i >= 0 ; i-- ){
+			for (int i = k; i >= 0 ; i-- ){
 				if (colName == "Open") {
 					openL.getData().add(new XYChart.Data(comp.companyData.get(i).getDate(),comp.companyData.get(i).getOpen()));
 
@@ -288,16 +292,7 @@ public class ChartView {
 				}
 			}
 			
-			// for (Data<String,Double> data : openL.getData()){
-			// 	// Node node = data.getNode();
-			// 	// node.setCurso()
-			// 	// data.setNode(new HoverNode(data.getXValue(),data.getYValue()));
-			// 	Tooltip.install(data.getNode(), new Tooltip(
-			// 		data.getXValue().toString() +"\n" + data.getYValue()));
-			// 	// System.out.println(data.getNode());
 
-
-			// }
 			answer.add(openL);
 		}
 		return answer;
